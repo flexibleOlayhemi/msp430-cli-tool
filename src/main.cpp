@@ -9,6 +9,8 @@
 #include <msp430.h>
 #include "include/HardwareConfig.hpp"
 #include "include/CommandBuffer.hpp"
+#include "include/CommandParser.hpp"
+#include "include/CommandProcessor.hpp"
 
 using namespace Config;
 
@@ -20,10 +22,16 @@ int main() {
     //Initialize Peripherals
     SystemPower::initLowPower();
     Console::init();
+    StatusLed::init();
+    UserBtn::init();
+    SystemTimer::init(50000);
+
+    //clear command buffer
     cmdLine.clear();
 
 
-    Console::println("MSP430 CLI Tool v1.0 Ready");
+    Console::println("MSP430 CLI Tool v2.0 Ready");
+    Console::print("> ");  //Command prompt for user
 
     while(1){
         //Check if serial character received
@@ -33,12 +41,15 @@ int main() {
 
             //Read character and Append
             if(cmdLine.addChar(rxChar)){
-                //line end received
-                Console::print("Received Command: ");
-                Console::println(cmdLine.getContents());
+                //Parse command string
+                App::Command currentCmd = App::CommandParser::parse(const_cast<char*>(cmdLine.getContents()));
 
-                //v1.0 clear and restart the loop
+                //Dispatch and execute command
+                App::CommandProcessor::execute(currentCmd);
+
+                //v2.0 Reset for next command
                 cmdLine.clear();
+                Console::print("> ");
             }
         }
     }
