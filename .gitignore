@@ -1,6 +1,5 @@
 # Ignore CCS buid folders IDE settings and binaries
 Debug/
-msp430-modern-cpp-template/
 .ccsproject
 .cproject
 .launches/

@@ -7,8 +7,8 @@
 
 
 #include <msp430.h>
-#include "HardwareConfig.hpp"
-#include "CommandBuffer.hpp"
+#include "include/HardwareConfig.hpp"
+#include "include/CommandBuffer.hpp"
 
 using namespace Config;
 
