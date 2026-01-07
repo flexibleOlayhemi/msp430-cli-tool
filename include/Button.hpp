@@ -26,7 +26,7 @@ namespace Hardware {
           *OutReg |= BitMask;  // pull up high
 
           *IesReg |= BitMask;
-          *IfgReg &= BitMask;
+          *IfgReg &= ~BitMask;
           *IeReg |= BitMask;
 
       }
@@ -37,6 +37,12 @@ namespace Hardware {
 
       static bool isSource(){
           return *IfgReg & BitMask;
+      }
+
+      static bool isPressed(){
+          //0 when pressed , pull-up
+          //Return TRUE if the bit is 0
+          return !(*InReg & BitMask);
       }
 
 
