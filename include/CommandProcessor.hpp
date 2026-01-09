@@ -21,6 +21,9 @@ namespace App{
             if (std::strcmp(cmd.action,"enable") == 0){
                 handleEnable(cmd);
             }
+            else if (std::strcmp(cmd.action,"disable") == 0){
+                handleDisable(cmd);
+                        }
             else if (std::strcmp(cmd.action, "read") == 0){
                 handleRead(cmd);
             }
@@ -45,6 +48,20 @@ namespace App{
                 Config::Console::println("ERR: Invalid Target");  //Execution Error
             }
         }
+
+        static void handleDisable(const Command& cmd){
+            if(cmd.target != nullptr && std::strcmp(cmd.target, "D1") == 0){
+                Config::StatusLed::off(); //Dispatch and execute
+
+                if (cmd.verbose){
+                    Config::Console::println("LED D1 Disabled."); //send feedback if verbose
+                }
+                Config::Console::println("OK"); // Success feedback
+            } else{
+                Config::Console::println("ERR: Invalid Target");  //Execution Error
+            }
+        }
+
 
         static void handleRead(const Command& cmd) {
             if (cmd.target != nullptr && std::strcmp(cmd.target, "BUTTON") == 0) {
