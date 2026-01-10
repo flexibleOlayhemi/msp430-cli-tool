@@ -13,18 +13,28 @@
 namespace App{
     class CommandProcessor{
     public:
-        static void execute(const Command& cmd){
+        static void execute(const App::Command& cmd){
             //check if command is valid
             if (cmd.action == nullptr) return;
 
+            //Dispatch and execute command
             if (std::strcmp(cmd.action,"enable") == 0){
                 handleEnable(cmd);
+            }
+            else if (std::strcmp(cmd.action,"disable") == 0){
+                handleDisable(cmd);
+                        }
+            else if (std::strcmp(cmd.action, "read") == 0){
+                handleRead(cmd);
             }
             else {
                 //send Error Message
                 Config::Console::println("ERR: Unknown Command");
             }
         }
+
+
+
     private:
         static void handleEnable(const Command& cmd){
             if(cmd.target != nullptr && std::strcmp(cmd.target, "D1") == 0){
@@ -37,6 +47,63 @@ namespace App{
             } else{
                 Config::Console::println("ERR: Invalid Target");  //Execution Error
             }
+        }
+
+        static void handleDisable(const Command& cmd){
+            if(cmd.target != nullptr && std::strcmp(cmd.target, "D1") == 0){
+                Config::StatusLed::off(); //Dispatch and execute
+
+                if (cmd.verbose){
+                    Config::Console::println("LED D1 Disabled."); //send feedback if verbose
+                }
+                Config::Console::println("OK"); // Success feedback
+            } else{
+                Config::Console::println("ERR: Invalid Target");  //Execution Error
+            }
+        }
+
+
+        static void handleRead(const Command& cmd) {
+                if (cmd.target == nullptr){
+                    Config::Console::println("ERR: NO Sensor specified");
+                    return;
+                }
+
+                if (std::strcmp(cmd.target, "BUTTON") == 0) {
+                bool pressed = Config::UserBtn::isPressed();
+
+                    if (cmd.verbose) {
+
+                        Config::Console::println(pressed ? "BTN: PRESSED" : "BTN: RELEASED");
+                    }
+                    else{
+                        Config::Console::println(pressed ? "1" : "0");
+                    }
+                    Config::Console::println("OK");
+                }
+                else if (std::strcmp(cmd.target, "POT") == 0){
+                    uint16_t val = Config::Potentiometer::read();
+                    if (cmd.verbose){
+                        Config::Console::print("Current POT value is: ");
+                    }
+
+                    Config::Console::printNumber(val);
+                    Config::Console::println("");
+                    Config::Console::println("OK");
+                }
+                else if (std::strcmp(cmd.target, "LDR") == 0){
+                    uint16_t val = Config::LightSensor::read();
+                    if (cmd.verbose){
+                        Config::Console::print("Current LDR value is: ");
+                    }
+
+                    Config::Console::printNumber(val);
+                    Config::Console::println("");
+                    Config::Console::println("OK");
+                }
+                else{
+                    Config::Console::println("ERR: Invalid Sensor");
+                }
         }
 
     };

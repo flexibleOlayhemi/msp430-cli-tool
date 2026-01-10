@@ -25,12 +25,19 @@ int main() {
     StatusLed::init();
     UserBtn::init();
     SystemTimer::init(50000);
+    Potentiometer::init();
+    LightSensor::init();
+
+
 
     //clear command buffer
     cmdLine.clear();
 
+    //wait 2secs for initialization
+    __delay_cycles(2000000);
 
-    Console::println("MSP430 CLI Tool v2.0 Ready");
+
+    Console::println("MSP430 CLI Tool v3.0 Ready");
     Console::print("> ");  //Command prompt for user
 
     while(1){
@@ -39,12 +46,17 @@ int main() {
         if (Console::available()){
             char rxChar = Console::read();
 
+            //echo back character
+            Console::sendChar(rxChar);
+
             //Read character and Append
             if(cmdLine.addChar(rxChar)){
                 //Parse command string
                 App::Command currentCmd = App::CommandParser::parse(const_cast<char*>(cmdLine.getContents()));
 
                 //Dispatch and execute command
+                //Print response on new line
+                Console::print("\r\n");
                 App::CommandProcessor::execute(currentCmd);
 
                 //v2.0 Reset for next command

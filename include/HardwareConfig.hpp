@@ -11,6 +11,7 @@
 #include "Uart.hpp"
 #include "Timer.hpp"
 #include "System.hpp"
+#include "Adc.hpp"
 
 namespace Config{
 
@@ -23,8 +24,10 @@ namespace Config{
 
     //using StatusLed = Hardware::Led<Pins::RedLed>;
 
-    using UserBtn = Hardware::Button<RegPtr,&P1IN,&P1DIR,&P1REN,&P1OUT,
-            &P1IE,&P1IES,&P1IFG,BIT4>;
+    using UserBtn = Hardware::Button<RegPtr,&P2IN,&P2DIR,&P2REN,&P2OUT,
+            &P2IE,&P2IES,&P2IFG,BIT0>;
     using Console = Hardware::Uart;
     using SystemTimer = Hardware::TimerA<Hardware::TimerClock::SMCLK>;
+    using Potentiometer = Hardware::Adc<INCH_4, BIT4>;
+    using LightSensor   = Hardware::Adc<INCH_5, BIT5>;
 }
