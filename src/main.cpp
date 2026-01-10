@@ -37,7 +37,7 @@ int main() {
     __delay_cycles(2000000);
 
 
-    Console::println("MSP430 CLI Tool v2.0 Ready");
+    Console::println("MSP430 CLI Tool v3.0 Ready");
     Console::print("> ");  //Command prompt for user
 
     while(1){
