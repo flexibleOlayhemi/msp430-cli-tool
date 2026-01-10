@@ -53,6 +53,27 @@ namespace Hardware{
             print("\r\n");
         }
 
+        static void printNumber(uint16_t n){
+            if (n == 0){
+                sendChar('0');
+                return;
+            }
+
+            char buf[5]; // for 10bit adc value max 1023 then null
+            uint8_t i = 0;
+
+            //convert integer to string
+            while (n > 0){
+                buf[i++] = (n % 10 + '0');
+                n /=10;  //divide by 10 for next integer digit
+            }
+
+
+            while(i > 0){
+                sendChar(buf[--i]);
+            }
+        }
+
         //check if the RX interrupt flag is set
         static bool available(){
             return (IFG2 & UCA0RXIFG);

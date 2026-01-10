@@ -64,21 +64,46 @@ namespace App{
 
 
         static void handleRead(const Command& cmd) {
-            if (cmd.target != nullptr && std::strcmp(cmd.target, "BUTTON") == 0) {
+                if (cmd.target == nullptr){
+                    Config::Console::println("ERR: NO Sensor specified");
+                    return;
+                }
+
+                if (std::strcmp(cmd.target, "BUTTON") == 0) {
                 bool pressed = Config::UserBtn::isPressed();
 
-                if (cmd.verbose) {
+                    if (cmd.verbose) {
 
-                    Config::Console::println(pressed ? "BTN: PRESSED" : "BTN: RELEASED");
+                        Config::Console::println(pressed ? "BTN: PRESSED" : "BTN: RELEASED");
+                    }
+                    else{
+                        Config::Console::println(pressed ? "1" : "0");
+                    }
+                    Config::Console::println("OK");
+                }
+                else if (std::strcmp(cmd.target, "POT") == 0){
+                    uint16_t val = Config::Potentiometer::read();
+                    if (cmd.verbose){
+                        Config::Console::print("Current POT value is: ");
+                    }
+
+                    Config::Console::printNumber(val);
+                    Config::Console::println("");
+                    Config::Console::println("OK");
+                }
+                else if (std::strcmp(cmd.target, "LDR") == 0){
+                    uint16_t val = Config::LightSensor::read();
+                    if (cmd.verbose){
+                        Config::Console::print("Current LDR value is: ");
+                    }
+
+                    Config::Console::printNumber(val);
+                    Config::Console::println("");
+                    Config::Console::println("OK");
                 }
                 else{
-                    Config::Console::println(pressed ? "1" : "0");
+                    Config::Console::println("ERR: Invalid Sensor");
                 }
-                Config::Console::println("OK");
-            }
-            else{
-                Config::Console::println("ERR: Invalid Sensor");
-            }
         }
 
     };

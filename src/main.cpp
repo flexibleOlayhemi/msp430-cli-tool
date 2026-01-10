@@ -25,6 +25,10 @@ int main() {
     StatusLed::init();
     UserBtn::init();
     SystemTimer::init(50000);
+    Potentiometer::init();
+    LightSensor::init();
+
+
 
     //clear command buffer
     cmdLine.clear();
