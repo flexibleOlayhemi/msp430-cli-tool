@@ -27,6 +27,7 @@ int main() {
     SystemTimer::init(50000);
     Potentiometer::init();
     LightSensor::init();
+    TempSensor::init();
 
 
 
