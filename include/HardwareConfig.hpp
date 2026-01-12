@@ -20,7 +20,7 @@ namespace Config{
     using SystemPower = Hardware::System;
 
     using StatusLed = Hardware::Led<RegPtr,&P1OUT,&P1DIR,BIT0>;
-    using ErrorLed = Hardware::Led<RegPtr,&P1OUT,&P1DIR,BIT3>;
+    //using ErrorLed = Hardware::Led<RegPtr,&P1OUT,&P1DIR,BIT3>;
 
     //using StatusLed = Hardware::Led<Pins::RedLed>;
 
@@ -30,4 +30,5 @@ namespace Config{
     using SystemTimer = Hardware::TimerA<Hardware::TimerClock::SMCLK>;
     using Potentiometer = Hardware::Adc<INCH_4, BIT4>;
     using LightSensor   = Hardware::Adc<INCH_5, BIT5>;
+    using TempSensor = Hardware::Adc<INCH_3, BIT3>;
 }

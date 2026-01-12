@@ -101,6 +101,15 @@ namespace App{
                     Config::Console::println("");
                     Config::Console::println("OK");
                 }
+                else if (std::strcmp(cmd.target, "NTC") == 0){
+                    uint16_t val = Config::TempSensor::read();
+                    if(cmd.verbose){
+                        Config::Console::print("Current NTC value is: ");
+                    }
+                    Config::Console::printNumber(val);
+                    Config::Console::println("");
+                    Config::Console::println("OK");
+                }
                 else{
                     Config::Console::println("ERR: Invalid Sensor");
                 }
