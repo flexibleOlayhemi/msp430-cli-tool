@@ -7,6 +7,7 @@
 
 #pragma once
 #include <msp430.h>
+#include <cstdint>
 
 namespace Hardware{
     class Beeper {
@@ -23,24 +24,35 @@ namespace Hardware{
             }
 
             //Up mode, count from 0 to CCRO
-            //frequency = SMCLK / (2 * CCR0)
-            // with 1MHz SMCLK , for 440Hz: CCRO = 1,136
             uint16_t cycles = 1000000 / freq;
 
-            TA1CCR0 = cycles; //Set the pitch
-            TA1CCR2 = cycles >> 1; //50% duty cycle // shift right 1 i.e div by 2
-
-
-            //Toggle every time timer hits CCR0
-            TA1CCTL2 = OUTMOD_7;  //toggle mode for PWM2 pin
+            TA0CCR0 = cycles; //Set the pitch
+            TA0CCR2 = cycles / 2; //50% duty cycle // shift right 1 i.e div by 2
 
             //start timer
-            TA1CTL = TASSEL_2 | MC_1 | TACLR; // SMCLK up-mode clear
+            TA0CTL = TASSEL_2 | MC_1 | TACLR; // SMCLK upmode
+
+            //Toggle every time timer hits CCR0
+            TA0CCTL2 = OUTMOD_7;  //toggle mode for PWM2 pin
+
+
+        }
+
+        static void playPeriod(uint16_t period){
+            if (period == 0xFFFF || period == 0) {
+                stop();
+                return;
+            }
+
+            TA0CCR0 = period;
+            TA0CCR2 = period >> 1;
+            TA0CCTL2 = OUTMOD_7;
+            TA0CTL = TASSEL_2 | MC_1 | TACLR;
         }
 
         static void stop(){
-            TA1CTL = MC_0; //stop timer
-            TA0CCTL1 &= ~OUTMOD_7; // reset output mode
+            TA0CTL = ~MC_1; //stop timer
+            TA0CCTL2 &= ~OUTMOD_7; // reset output mode
             P1OUT &= ~BIT6;  // ensure pin is low
         }
 

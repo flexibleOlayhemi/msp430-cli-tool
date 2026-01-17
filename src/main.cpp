@@ -28,7 +28,8 @@ int main() {
     Potentiometer::init();
     LightSensor::init();
     TempSensor::init();
-
+    Buzzer::init();
+    //__bis_SR_register(GIE); // enable global interrupt
 
 
     //clear command buffer

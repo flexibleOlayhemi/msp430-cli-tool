@@ -8,6 +8,7 @@
 #pragma once
 #include "HardwareConfig.hpp"
 #include "CommandParser.hpp"
+#include "Jukebox.hpp"
 #include <cstring>
 
 namespace App{
@@ -67,7 +68,7 @@ namespace App{
 
         static void handlePlay(const Command& cmd){
             if (cmd.target == nullptr){
-                Config::Console::println("ERR: play should be followed by TONE ");
+                Config::Console::println("ERR: play should be followed by TONE or MELODY");
                 return;
             }
 
@@ -92,6 +93,24 @@ namespace App{
                 }
                 Config::Buzzer::stop();
                 Config::Console::println("OK");
+            }
+            else if (std::strcmp(cmd.target, "MELODY") == 0 ){
+                if (cmd.args[0] ==  0){
+                     Config::Console::println("ERR: Please specify the Melody e.g 1 or 2");
+                     return;
+                 }
+                App::Jukebox::play((uint8_t)cmd.args[0]);
+                if (cmd.verbose) {
+
+                    Config::Console::print("Melody ");
+                    Config::Console::printNumber((uint8_t)cmd.args[0]);
+                    Config::Console::println("is Done playing.");
+                }
+                Config::Console::println("OK");
+
+            }
+            else{
+                Config::Console::println("ERR: Invalid play Command ");
             }
         }
 
