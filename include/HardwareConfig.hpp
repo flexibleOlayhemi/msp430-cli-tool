@@ -12,6 +12,7 @@
 #include "Timer.hpp"
 #include "System.hpp"
 #include "Adc.hpp"
+#include "Beeper.hpp"
 
 namespace Config{
 
@@ -31,4 +32,6 @@ namespace Config{
     using Potentiometer = Hardware::Adc<INCH_4, BIT4>;
     using LightSensor   = Hardware::Adc<INCH_5, BIT5>;
     using TempSensor = Hardware::Adc<INCH_3, BIT3>;
+    using Heater =  Hardware::Led<RegPtr,&P1OUT,&P1DIR,BIT6>; //reusing Led GPIO template class
+    using Buzzer = Hardware::Beeper;
 }

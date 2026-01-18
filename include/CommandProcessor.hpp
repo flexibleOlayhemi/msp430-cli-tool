@@ -8,6 +8,7 @@
 #pragma once
 #include "HardwareConfig.hpp"
 #include "CommandParser.hpp"
+#include "Jukebox.hpp"
 #include <cstring>
 
 namespace App{
@@ -26,6 +27,9 @@ namespace App{
                         }
             else if (std::strcmp(cmd.action, "read") == 0){
                 handleRead(cmd);
+            }
+            else if (std::strcmp(cmd.action, "play") == 0){
+                handlePlay(cmd);
             }
             else {
                 //send Error Message
@@ -62,6 +66,53 @@ namespace App{
             }
         }
 
+        static void handlePlay(const Command& cmd){
+            if (cmd.target == nullptr){
+                Config::Console::println("ERR: play should be followed by TONE or MELODY");
+                return;
+            }
+
+            if (std::strcmp(cmd.target, "TONE") == 0) {
+                if (cmd.args[0] ==  0){
+                    Config::Console::println("ERR: Please specify frequency! e.g 440 ");
+                    return;
+                }
+                uint16_t frequency = cmd.args[0];
+                uint16_t duration = (cmd.argCount > 1) ? cmd.args[1] : 100; // if duration not specified , default to 100ms
+
+                Config::Buzzer::play(frequency);
+
+                for (uint16_t i = 0; i < duration; i++) {
+                    __delay_cycles(1000);
+                }
+                if (cmd.verbose) {
+
+                    Config::Console::print("TONE played at frequency: ");
+                    Config::Console::printNumber(frequency);
+                    Config::Console::println("");
+                }
+                Config::Buzzer::stop();
+                Config::Console::println("OK");
+            }
+            else if (std::strcmp(cmd.target, "MELODY") == 0 ){
+                if (cmd.args[0] ==  0){
+                     Config::Console::println("ERR: Please specify the Melody e.g 1 or 2");
+                     return;
+                 }
+                App::Jukebox::play((uint8_t)cmd.args[0]);
+                if (cmd.verbose) {
+
+                    Config::Console::print("Melody ");
+                    Config::Console::printNumber((uint8_t)cmd.args[0]);
+                    Config::Console::println("is Done playing.");
+                }
+                Config::Console::println("OK");
+
+            }
+            else{
+                Config::Console::println("ERR: Invalid play Command ");
+            }
+        }
 
         static void handleRead(const Command& cmd) {
                 if (cmd.target == nullptr){
