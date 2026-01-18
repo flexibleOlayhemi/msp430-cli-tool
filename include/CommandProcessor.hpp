@@ -2,7 +2,7 @@
  * CommandProcessor.hpp
  *
  *  Created on: Jan 6, 2026
- *      Author: User
+ *      Author: Olayemi
  */
 
 #pragma once
@@ -40,30 +40,70 @@ namespace App{
 
 
     private:
-        static void handleEnable(const Command& cmd){
-            if(cmd.target != nullptr && std::strcmp(cmd.target, "D1") == 0){
-                Config::StatusLed::on(); //Dispatch and execute
+        //persistent state for the 4 shift registers LEDs D1 - D4
+        static uint8_t sregLedState;
 
+        static void handleEnable(const Command& cmd){
+           bool recognized = false;
+           if (cmd.target != nullptr && cmd.target[0]=='D' && cmd.target[1] >= '1' && cmd.target[1] <= '4'){
+               uint8_t index = cmd.target[1] - '1';
+               sregLedState |= (1 << index);
+               Config::BoardUI::writeLeds(sregLedState);
+               recognized = true;
+           }
+           else if(cmd.target != nullptr && std::strcmp(cmd.target, "D5") == 0){
+                Config::Led5::on(); //Dispatch and execute
+                recognized = true;
+            }
+            else if (cmd.target != nullptr && std::strcmp(cmd.target, "D6") == 0){
+                Config::Led6::on(); //Dispatch and execute
+                recognized = true;
+            }
+            if (recognized){
                 if (cmd.verbose){
-                    Config::Console::println("LED D1 enabled."); //send feedback if verbose
+                    Config::Console::print("LED ");
+                    Config::Console::print(cmd.target);
+                    Config::Console::println("  enabled."); //send feedback if verbose
                 }
                 Config::Console::println("OK"); // Success feedback
-            } else{
+            }
+            else{
                 Config::Console::println("ERR: Invalid Target");  //Execution Error
             }
         }
 
         static void handleDisable(const Command& cmd){
-            if(cmd.target != nullptr && std::strcmp(cmd.target, "D1") == 0){
-                Config::StatusLed::off(); //Dispatch and execute
-
-                if (cmd.verbose){
-                    Config::Console::println("LED D1 Disabled."); //send feedback if verbose
-                }
-                Config::Console::println("OK"); // Success feedback
-            } else{
-                Config::Console::println("ERR: Invalid Target");  //Execution Error
+            bool recognized = false;
+            if (cmd.target != nullptr && cmd.target[0]=='D' && cmd.target[1] >= '1' && cmd.target[1] <= '4'){
+                // If sregLedState was 0111 (D1,D2,D3 on)
+                // disable D3 (id=3):
+                // 1 << (3-1) is 0100
+                // ~(0100) is 1011
+                // 0111 & 1011 = 0011 (D3 is now off, others stay same)
+                uint8_t index = cmd.target[1] - '1';
+                sregLedState &= ~(1 << index);
+                Config::BoardUI::writeLeds(sregLedState);
+                recognized = true;
             }
+            else if(cmd.target != nullptr && std::strcmp(cmd.target, "D5") == 0){
+                 Config::Led5::off(); //Dispatch and execute
+                 recognized = true;
+             }
+             else if (cmd.target != nullptr && std::strcmp(cmd.target, "D6") == 0){
+                 Config::Led6::off(); //Dispatch and execute
+                 recognized = true;
+             }
+             if (recognized){
+                 if (cmd.verbose){
+                     Config::Console::print("LED ");
+                     Config::Console::print(cmd.target);
+                     Config::Console::println("  disabled."); //send feedback if verbose
+                 }
+                 Config::Console::println("OK"); // Success feedback
+             }
+             else{
+                 Config::Console::println("ERR: Invalid Target");  //Execution Error
+             }
         }
 
         static void handlePlay(const Command& cmd){
@@ -121,11 +161,27 @@ namespace App{
                 }
 
                 if (std::strcmp(cmd.target, "BUTTON") == 0) {
-                bool pressed = Config::UserBtn::isPressed();
+                    int btnId = cmd.args[0];
+                    bool pressed = false;
+
+                    if (btnId >= 1 && btnId <= 4){
+                        uint8_t btns = Config::BoardUI::readButtons();
+                        pressed = (btns & (1 << (btnId - 1)));
+                    }
+                    else if (btnId == 5) {
+                        pressed =  Config::Btn5::isPressed();
+                    }
+                    else if (btnId == 6) {
+                        pressed =  Config::Btn6::isPressed();
+                    }else {
+                        Config::Console::println("ERR: Available  BTN ID 1 - 6 ");
+                        return;
+                    }
 
                     if (cmd.verbose) {
-
-                        Config::Console::println(pressed ? "BTN: PRESSED" : "BTN: RELEASED");
+                        Config::Console::print("Button ");
+                        Config::Console::printNumber(btnId);
+                        Config::Console::println(pressed ? " is PRESSED" : " is RELEASED");
                     }
                     else{
                         Config::Console::println(pressed ? "1" : "0");

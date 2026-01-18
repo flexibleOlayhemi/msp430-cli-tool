@@ -16,30 +16,36 @@ using namespace Config;
 
 App::CommandBuffer cmdLine;
 
+// Initialize the persistent LED memory
+uint8_t App::CommandProcessor::sregLedState = 0x00;
+
 int main() {
     WDTCTL = WDTPW | WDTHOLD; // Stop watchdog
 
     //Initialize Peripherals
     SystemPower::initLowPower();
     Console::init();
-    StatusLed::init();
-    UserBtn::init();
+    //StatusLed::init();
+    Led5::init();Led6::init();
+    //UserBtn::init();
+    Btn5::init();Btn6::init();
+    BoardUI::init();
     SystemTimer::init(50000);
     Potentiometer::init();
     LightSensor::init();
     TempSensor::init();
     Buzzer::init();
-    //__bis_SR_register(GIE); // enable global interrupt
+
 
 
     //clear command buffer
     cmdLine.clear();
 
     //wait 2secs for initialization
-    __delay_cycles(2000000);
+    //__delay_cycles(2000000);
 
 
-    Console::println("MSP430 CLI Tool v3.0 Ready");
+    Console::println("MSP430 CLI Tool v4.0 Ready");
     Console::print("> ");  //Command prompt for user
 
     while(1){
