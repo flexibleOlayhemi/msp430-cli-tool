@@ -36,7 +36,7 @@ namespace App {
             //search for flags like "-v" and numeric param
             char* next = strtok(nullptr, " ");
             while (next != nullptr){
-                if (std::strcmp(next, "-v") == 0){
+                if (std::strcmp(next, "-V") == 0){
                     cmd.verbose = true;
                 }
                 else if ( cmd.argCount < 2 && next[0] >= '0' && next[0] <= '9' ) {

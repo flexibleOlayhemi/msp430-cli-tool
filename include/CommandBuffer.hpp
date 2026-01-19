@@ -30,6 +30,17 @@ namespace App {
         //read character and append
         //return true if line end received
         bool addChar(char c){
+            //convert input to UPPERCASE
+            if ( c >= 'a' && c <='z') {
+                  c &= ~0x20; // clear bit 5 to convert to uppercase
+            }
+
+            //handle backspace
+            if(c == '\b' || c == 127){
+                if (index > 0) index--;
+                return false;
+            }
+
             if (c == '\r' || c == '\n'){
                 buffer[index] = '\0'; // null terminate the string
                 return true;
@@ -37,7 +48,7 @@ namespace App {
 
             //Append if there is space
             if(index < (MAX_SIZE - 1)){
-                buffer[index++] = c;
+                  buffer[index++] = c;
             }
             return false;
         }

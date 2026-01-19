@@ -19,16 +19,16 @@ namespace App{
             if (cmd.action == nullptr) return;
 
             //Dispatch and execute command
-            if (std::strcmp(cmd.action,"enable") == 0){
+            if (std::strcmp(cmd.action,"ENABLE") == 0){
                 handleEnable(cmd);
             }
-            else if (std::strcmp(cmd.action,"disable") == 0){
+            else if (std::strcmp(cmd.action,"DISABLE") == 0){
                 handleDisable(cmd);
                         }
-            else if (std::strcmp(cmd.action, "read") == 0){
+            else if (std::strcmp(cmd.action, "READ") == 0){
                 handleRead(cmd);
             }
-            else if (std::strcmp(cmd.action, "play") == 0){
+            else if (std::strcmp(cmd.action, "PLAY") == 0){
                 handlePlay(cmd);
             }
             else {
@@ -45,6 +45,7 @@ namespace App{
 
         static void handleEnable(const Command& cmd){
            bool recognized = false;
+           bool isHeater = false;
            if (cmd.target != nullptr && cmd.target[0]=='D' && cmd.target[1] >= '1' && cmd.target[1] <= '4'){
                uint8_t index = cmd.target[1] - '1';
                sregLedState |= (1 << index);
@@ -54,14 +55,20 @@ namespace App{
            else if(cmd.target != nullptr && std::strcmp(cmd.target, "D5") == 0){
                 Config::Led5::on(); //Dispatch and execute
                 recognized = true;
-            }
-            else if (cmd.target != nullptr && std::strcmp(cmd.target, "D6") == 0){
+           }
+           else if (cmd.target != nullptr && std::strcmp(cmd.target, "D6") == 0){
                 Config::Led6::on(); //Dispatch and execute
                 recognized = true;
-            }
-            if (recognized){
+           }
+           else if (cmd.target != nullptr && std::strcmp(cmd.target, "HEATER") == 0){
+                Config::Heater::on(); //Dispatch and execute
+                recognized = true;
+                isHeater = true;
+           }
+
+           if (recognized){
                 if (cmd.verbose){
-                    Config::Console::print("LED ");
+                    Config::Console::print(isHeater ? "" : "LED ");
                     Config::Console::print(cmd.target);
                     Config::Console::println("  enabled."); //send feedback if verbose
                 }
@@ -74,6 +81,7 @@ namespace App{
 
         static void handleDisable(const Command& cmd){
             bool recognized = false;
+            bool isHeater = false;
             if (cmd.target != nullptr && cmd.target[0]=='D' && cmd.target[1] >= '1' && cmd.target[1] <= '4'){
                 // If sregLedState was 0111 (D1,D2,D3 on)
                 // disable D3 (id=3):
@@ -93,9 +101,14 @@ namespace App{
                  Config::Led6::off(); //Dispatch and execute
                  recognized = true;
              }
+             else if (cmd.target != nullptr && std::strcmp(cmd.target, "HEATER") == 0){
+                 Config::Heater::off(); //Dispatch and execute
+                 recognized = true;
+                 isHeater = true;
+             }
              if (recognized){
                  if (cmd.verbose){
-                     Config::Console::print("LED ");
+                     Config::Console::print(isHeater ? "" : "LED ");
                      Config::Console::print(cmd.target);
                      Config::Console::println("  disabled."); //send feedback if verbose
                  }

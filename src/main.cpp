@@ -34,6 +34,7 @@ int main() {
     Potentiometer::init();
     LightSensor::init();
     TempSensor::init();
+    Heater::init();
     Buzzer::init();
 
 
