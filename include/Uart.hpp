@@ -2,7 +2,7 @@
  * Uart.hpp
  *
  *  Created on: Jan 4, 2026
- *      Author: User
+ *      Author: Olayemi
  */
 
 #pragma once
@@ -13,7 +13,7 @@ namespace Hardware{
     class Uart{
     public:
         static void init() {
-            // 1. Setup the Clock (DCO) to 1MHz
+            //  Setup the Clock (DCO) to 1MHz
             // If calibration constants were erased, we stop here (safety check)
             //if (CALBC1_1MHZ==0xFF) while(1);
 
@@ -21,11 +21,11 @@ namespace Hardware{
             BCSCTL1 = CALBC1_1MHZ;  // Set range
             DCOCTL = CALDCO_1MHZ;   // Set DCO step + modulation
 
-            // 2. Setup Pins (P1.1=RXD, P1.2=TXD)
+            //  Setup Pins (P1.1=RXD, P1.2=TXD)
             P1SEL  = BIT1 | BIT2;
             P1SEL2 = BIT1 | BIT2;
 
-            // 3. Configure UART
+            //  Configure UART
             UCA0CTL1 |= UCSWRST;    // Hold in reset
             UCA0CTL1 |= UCSSEL_2;   // Use SMCLK (now locked at 1MHz)
 

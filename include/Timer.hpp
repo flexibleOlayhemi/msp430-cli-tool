@@ -2,7 +2,7 @@
  * Timer.hpp
  *
  *  Created on: Jan 5, 2026
- *      Author: User
+ *      Author: Olayemi
  */
 
 #pragma once

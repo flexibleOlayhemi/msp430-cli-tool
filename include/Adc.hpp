@@ -2,7 +2,7 @@
  * Adc.hpp
  *
  *  Created on: Jan 10, 2026
- *      Author: User
+ *      Author: Olayemi
  */
 
 #pragma once

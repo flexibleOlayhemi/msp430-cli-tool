@@ -2,7 +2,7 @@
  * HardwareConfig.hpp
  *
  *  Created on: Dec 29, 2025
- *      Author: User
+ *      Author: Olayemi
  */
 
 #pragma once

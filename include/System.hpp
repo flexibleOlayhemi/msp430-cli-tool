@@ -2,7 +2,7 @@
  * System.hpp
  *
  *  Created on: Dec 28, 2025
- *      Author: User
+ *      Author: Olayemi
  */
 #pragma once
 #include <msp430.h>

@@ -2,7 +2,7 @@
  * main.cpp
  *
  *  Created on: Jan 5, 2026
- *      Author: User
+ *      Author: Olayemi
  */
 
 
@@ -25,12 +25,9 @@ int main() {
     //Initialize Peripherals
     SystemPower::initLowPower();
     Console::init();
-    //StatusLed::init();
     Led5::init();Led6::init();
-    //UserBtn::init();
     Btn5::init();Btn6::init();
     BoardUI::init();
-    SystemTimer::init(50000);
     Potentiometer::init();
     LightSensor::init();
     TempSensor::init();

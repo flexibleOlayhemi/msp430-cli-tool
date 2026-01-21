@@ -108,7 +108,7 @@ namespace App{
              }
              if (recognized){
                  if (cmd.verbose){
-                     Config::Console::print(isHeater ? "" : "LED ");
+                     Config::Console::print(isHeater ? "" : "LED ");  // print message as HEATER or LED
                      Config::Console::print(cmd.target);
                      Config::Console::println("  disabled."); //send feedback if verbose
                  }

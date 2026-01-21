@@ -2,7 +2,7 @@
  * Light.hpp
  *
  *  Created on: Dec 27, 2025
- *      Author: User
+ *      Author: Olayemi
  */
 #pragma once
 
