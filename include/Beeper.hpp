@@ -51,7 +51,7 @@ namespace Hardware{
         }
 
         static void stop(){
-            TA0CTL = ~MC_1; //stop timer
+            TA0CTL &= ~MC_3; //stop timer
             TA0CCTL2 &= ~OUTMOD_7; // reset output mode
             P1OUT &= ~BIT6;  // ensure pin is low
         }

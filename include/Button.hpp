@@ -25,9 +25,9 @@ namespace Hardware {
           *RenReg |= BitMask;
           *OutReg |= BitMask;  // pull up high
 
-          *IesReg |= BitMask;
-          *IfgReg &= ~BitMask;
-          *IeReg |= BitMask;
+         // *IesReg |= BitMask;
+         // *IfgReg &= ~BitMask;
+         // *IeReg |= BitMask;
 
       }
 

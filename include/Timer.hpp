@@ -15,11 +15,12 @@ namespace Hardware{
     template<TimerClock Source>
     class TimerA {
     public:
-        static void init(uint16_t period){
+        static void init(volatile uint16_t& CTL, volatile uint16_t& CCR0,volatile uint16_t& CCTL0, uint16_t period){
             //Configure: Up Mode , Divider /8, Interrupt Enabled
-            TA0CTL = getSourceBits() | MC_1 | ID_3;
-            TA0CCR0 = period;
-            TA0CCTL0 = CCIE;
+            CTL = getSourceBits() | MC_1 | ID_0 | TACLR;
+            CCR0 = period;
+            CCTL0 = CCIE;
+
         }
     private:
         //This logic stripped away by the compiler

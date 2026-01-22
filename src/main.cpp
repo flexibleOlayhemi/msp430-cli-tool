@@ -19,6 +19,14 @@ App::CommandBuffer cmdLine;
 // Initialize the persistent LED memory
 uint8_t App::CommandProcessor::sregLedState = 0x00;
 
+// Initialize jukebox in memory
+const uint16_t* App::Jukebox::currentNotes = nullptr;
+const uint16_t* App::Jukebox::currentDuration =  nullptr;
+uint8_t App::Jukebox::currentLength = 0;
+uint8_t App::Jukebox::currentIndex = 0;
+ uint16_t App::Jukebox::msCountdown = 0;
+bool App::Jukebox::isPlaying = false;
+
 int main() {
     WDTCTL = WDTPW | WDTHOLD; // Stop watchdog
 
@@ -31,16 +39,19 @@ int main() {
     Potentiometer::init();
     LightSensor::init();
     TempSensor::init();
+    //initialize timer 1 for melody at 1ms : Period 1000 = 1ms at 1Mhz SMCLK
+    Timer::init(TA1CTL,TA1CCR0,TA1CCTL0,1000);
     Heater::init();
     Buzzer::init();
 
 
 
+    __bis_SR_register(GIE);
+
+
+
     //clear command buffer
     cmdLine.clear();
-
-    //wait 2secs for initialization
-    //__delay_cycles(2000000);
 
 
     Console::println("MSP430 CLI Tool v4.0 Ready");
@@ -71,5 +82,10 @@ int main() {
             }
         }
     }
+}
+
+#pragma vector = TIMER1_A0_VECTOR
+__interrupt void Timer1_ISR(void){
+    App::Jukebox::tick();
 }
 
