@@ -31,6 +31,13 @@ namespace App{
             else if (std::strcmp(cmd.action, "PLAY") == 0){
                 handlePlay(cmd);
             }
+            else if (std::strcmp(cmd.action, "STOP") == 0) {
+                if (App::Jukebox::isPlaying){
+                App::Jukebox::stop();
+                Config::Console::println("Melody halted.");
+                } else
+                Config::Console::println("Halt only when Melody is playing!");
+            }
             else {
                 //send Error Message
                 Config::Console::println("ERR: Unknown Command");
