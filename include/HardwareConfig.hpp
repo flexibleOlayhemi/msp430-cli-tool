@@ -21,13 +21,12 @@ namespace Config{
 
     using SystemPower = Hardware::System;
 
-    using StatusLed = Hardware::Led<RegPtr,&P1OUT,&P1DIR,BIT0>;
+
     using Led5 = Hardware::Led<RegPtr,&P1OUT,&P1DIR,BIT0>;
     using Led6 = Hardware::Led<RegPtr,&P1OUT,&P1DIR,BIT7>;
 
 
-    using UserBtn = Hardware::Button<RegPtr,&P3IN,&P3DIR,&P3REN,&P3OUT,
-            nullptr,nullptr,nullptr,BIT2>;
+
     using Btn5 = Hardware::Button<RegPtr,&P3IN,&P3DIR,&P3REN,&P3OUT,
             nullptr,nullptr,nullptr,BIT2>;
     using Btn6 = Hardware::Button<RegPtr,&P3IN,&P3DIR,&P3REN,&P3OUT,

@@ -15,7 +15,8 @@ namespace App{
     public:
 
         static constexpr uint16_t PAUSE_NOTE = 0;
-        static bool isPlaying;
+        static volatile bool isPlaying;
+        static uint16_t msCountdown;
 
         static void play(uint8_t id){
             // Note Frequencies TA0CCR0 Period values for 1MHz SMCLK
@@ -143,7 +144,7 @@ namespace App{
         static const uint16_t* currentDuration;
         static uint8_t currentLength;
         static uint8_t currentIndex;
-        static uint16_t msCountdown;
+
 
 
 

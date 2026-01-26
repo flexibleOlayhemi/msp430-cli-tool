@@ -1,0 +1,24 @@
+Project Feedback: MSP430 Command Line Interface
+
+Technical Challenges & Issues:
+
+->Timer Mode Conflicts: A significant issue was encountered during the implementation of the Buzzer::stop() routine. 
+Initially, overwriting the TA0CTL register caused system-wide freezes. This was resolved by switching to bitwise 
+operations (&= ~MC_3) to surgically halt the timer without disrupting the clock source (TASSEL).
+
+->Asynchronous State Management: Managing the hand-off between the Main Loop and the Timer ISR required careful use of 
+the volatile keyword. Without this, the compiler optimized away state changes (like isPlaying), leading to logic hangs.
+
+->Memory Bounds: Handling melody arrays required strict boundary checks to prevent the "Off-By-One" errors that previously 
+caused CPU crashes when a song reached its final note.
+
+Positive Remarks:
+
+->Multitasking Success: The transition from a blocking for-loop architecture to a non-blocking Interrupt Service Routine (ISR) 
+significantly improved the user experience. The CLI remains perfectly responsive while audio is processed in the background.
+
+->Modern C++ Benefits: Implementing a reusable template class, Hardware Abstraction Layer (HAL) using namespaces and #pragma once proved highly effective. 
+It made the code significantly more readable and allowed for rapid debugging of hardware pins without touching the core application logic.
+
+->With this approach i was able to use a version control by building the system ground up in versions , i sincerely enjoyed working 
+on this project.

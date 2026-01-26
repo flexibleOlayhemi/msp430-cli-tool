@@ -142,8 +142,9 @@ namespace App{
 
                 Config::Buzzer::play(frequency);
 
+
                 for (uint16_t i = 0; i < duration; i++) {
-                    __delay_cycles(1000);
+                   __delay_cycles(1000);
                 }
                 if (cmd.verbose) {
 
